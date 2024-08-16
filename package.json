@@ -20,5 +20,9 @@
   "peerDependencies": {
     "@xata.io/client": "^0.30.0",
     "lucia": "^3.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1benw/lucia-adapter-xata.git"
   }
 }
