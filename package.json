@@ -1,0 +1,24 @@
+{
+  "name": "lucia-adapter-xata",
+  "version": "1.0.0",
+  "description": "Lucia adapter for Xata",
+  "author": "Benjamin Walker",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.3.0",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "@xata.io/client": "^0.30.0",
+    "lucia": "^3.2.0"
+  }
+}
