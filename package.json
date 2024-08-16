@@ -1,6 +1,6 @@
 {
   "name": "lucia-adapter-xata",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lucia adapter for Xata",
   "author": "Benjamin Walker",
   "license": "MIT",
