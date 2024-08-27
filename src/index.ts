@@ -1,4 +1,4 @@
-import { Adapter, DatabaseSession, DatabaseUser } from "lucia";
+import { Adapter, DatabaseSession, DatabaseUser, UserId } from "lucia";
 import { XataRecord, SchemaInference, Repository, SelectedPick, lte } from "@xata.io/client";
 
 const tables = [
@@ -54,7 +54,7 @@ export class XataAdapter implements Adapter {
     await this.client.db.auth_sessions.delete(sessionId);
   }
 
-  async deleteUserSessions(userId: string) {
+  async deleteUserSessions(userId: UserId) {
     const sessions = await this.client.db.auth_sessions
       .select(["id"])
       .filter({
@@ -65,7 +65,9 @@ export class XataAdapter implements Adapter {
     await this.client.db.auth_sessions.delete(sessions.map((s) => s.id));
   }
 
-  async getSessionAndUser(sessionId: string): Promise<any> {
+  async getSessionAndUser(
+    sessionId: string
+  ): Promise<[DatabaseSession | null, DatabaseUser | null]> {
     const session = await this.client.db.auth_sessions.read(sessionId, ["*", "user.*"]);
 
     const sessionData = transformIntoDatabaseSession(session);
@@ -74,19 +76,7 @@ export class XataAdapter implements Adapter {
     return [sessionData, userData];
   }
 
-  async getSession(sessionId: string) {
-    const session = await this.client.db.auth_sessions.read(sessionId);
-
-    return transformIntoDatabaseSession(session);
-  }
-
-  async getUserFromSessionId(sessionId: string): Promise<DatabaseUser> {
-    const session = await this.client.db.auth_sessions.read(sessionId);
-
-    return transformIntoDatabaseUser(session?.user);
-  }
-
-  async getUserSessions(userId: string): Promise<DatabaseSession[]> {
+  async getUserSessions(userId: UserId): Promise<DatabaseSession[]> {
     const sessions = await this.client.db.auth_sessions
       .filter({
         user: userId,
@@ -129,7 +119,8 @@ function transformIntoDatabaseSession(
   };
 }
 
-function transformIntoDatabaseUser(raw: any): DatabaseUser {
+function transformIntoDatabaseUser(raw: any): DatabaseUser | null {
+  if (!raw) return null;
   const { id, xata, ...attributes } = raw;
   return {
     id,

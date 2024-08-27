@@ -44,14 +44,6 @@ export class XataAdapter {
         const userData = transformIntoDatabaseUser(session?.user);
         return [sessionData, userData];
     }
-    async getSession(sessionId) {
-        const session = await this.client.db.auth_sessions.read(sessionId);
-        return transformIntoDatabaseSession(session);
-    }
-    async getUserFromSessionId(sessionId) {
-        const session = await this.client.db.auth_sessions.read(sessionId);
-        return transformIntoDatabaseUser(session?.user);
-    }
     async getUserSessions(userId) {
         const sessions = await this.client.db.auth_sessions
             .filter({
@@ -90,6 +82,8 @@ function transformIntoDatabaseSession(raw) {
     };
 }
 function transformIntoDatabaseUser(raw) {
+    if (!raw)
+        return null;
     const { id, xata, ...attributes } = raw;
     return {
         id,

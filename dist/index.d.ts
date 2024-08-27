@@ -1,4 +1,4 @@
-import { Adapter, DatabaseSession, DatabaseUser } from "lucia";
+import { Adapter, DatabaseSession, DatabaseUser, UserId } from "lucia";
 import { XataRecord, SchemaInference, Repository } from "@xata.io/client";
 declare const tables: readonly [{
     readonly name: "auth_users";
@@ -42,11 +42,9 @@ export declare class XataAdapter implements Adapter {
     constructor(client: XataClient);
     deleteExpiredSessions(): Promise<void>;
     deleteSession(sessionId: string): Promise<void>;
-    deleteUserSessions(userId: string): Promise<void>;
-    getSessionAndUser(sessionId: string): Promise<any>;
-    getSession(sessionId: string): Promise<DatabaseSession | null>;
-    getUserFromSessionId(sessionId: string): Promise<DatabaseUser>;
-    getUserSessions(userId: string): Promise<DatabaseSession[]>;
+    deleteUserSessions(userId: UserId): Promise<void>;
+    getSessionAndUser(sessionId: string): Promise<[DatabaseSession | null, DatabaseUser | null]>;
+    getUserSessions(userId: UserId): Promise<DatabaseSession[]>;
     setSession(session: DatabaseSession): Promise<void>;
     updateSessionExpiration(sessionId: string, expiresAt: Date): Promise<void>;
 }
